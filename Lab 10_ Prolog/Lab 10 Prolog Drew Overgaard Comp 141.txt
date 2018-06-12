@@ -1,0 +1,126 @@
+:- dynamic have/1.
+:- dynamic location/2.
+:- dynamic in/2.
+
+place(prairie).
+place(canyon).
+place(foothills).
+place(mountain).
+place(dock).
+place(town).
+place(shop).
+place(forest).
+place(woods).
+place(sinkhole).
+place(cave).
+place(river).
+place(secretPlace).
+
+
+location(sword, shop).
+location(bow, canyon).
+location(diamond, river).
+location(matches, foothills).
+location(fisherman, dock).
+location(blacksmith, shop).
+location(archer, canyon).
+location(troll, mountain).
+location(wumpus, forest).
+location(arrow, mountain).
+
+
+lightable(hay).
+lightable(matches).
+
+person(fisherman).
+person(blacksmith).
+person(archer).
+
+monster(troll).
+monster(wumpus).
+
+
+
+path(prairie, sinkhole).
+path(sinkhole, cave).
+path(cave, river).
+path(town, shop).
+path(town, dock).
+path(town, woods).
+path(woods, forest).
+path(prairie, woods).
+
+
+
+pathway(X,Y) :- path(Y, X).
+pathway(X,Y) :- path(X, Y).
+
+
+in(woods).
+
+list_things(Place) :-
+	location(X,Place),
+	write(X),
+	nl,
+	fail.
+list_things(_).
+
+
+
+
+list_paths(Place) :-
+	pathway(Place,X),
+	write(X),
+	nl,
+	fail.
+list_paths(_).
+
+
+
+
+look :-
+in(Place),
+	write('You are in the '), write(Place), nl,
+	write('You can see: '), nl,
+	list_things(Place),
+	write('You can go to: '), nl,
+list_paths(Place).
+
+have(hat).
+have(shovel).
+
+
+inventory :-
+	have(Item),
+	write('You have '), write(Item), nl,
+    fail.
+inventory.
+
+
+take(Item) :-
+    item(Item),
+    in(Place),
+    retract(location(Item,Place)),
+    asserta(have(Item)),
+    write('tanken'), nl.
+take(_) :-
+    write('I don\'t see how.'),
+    nl.
+
+
+goto(Place) :-
+    in(Place),
+    pathway(X, Place),
+    retract(in(X)),
+    asserta(in(Place)),
+    write('You made it to the new location.'), nl.
+goto(_) :-
+    write('I don\'t see how you\'re going to get there.'),
+    nl.
+
+factorial(N, Fact) :-
+    N>0,
+    oneLess is N -1,
+    factorial(oneLess, factAgain),
+    Fact is N * factAgain,
+	write(Fact).
